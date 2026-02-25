@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ข้อ 4 – คำยืมจากภาษาจีน</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#f5c842;--dark:#0d0a1e;--card:#1e1a3a;--acc:#7c3aed;--green:#22c55e;--red:#ef4444;--lc:#22c55e;--lb:rgba(34,197,94,0.15);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--dark);color:#e2d9f3;font-family:'Sarabun',sans-serif;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:20px 16px;
+  background-image:radial-gradient(ellipse at 20% 20%,#1a0a3e 0%,transparent 60%),
+                   radial-gradient(ellipse at 80% 80%,#0a1a3e 0%,transparent 60%);}
+.card{background:var(--card);border:1px solid rgba(124,58,237,.45);border-radius:20px;
+  padding:24px;max-width:580px;width:100%;box-shadow:0 0 50px rgba(124,58,237,.2);}
+.topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.pill{border-radius:100px;padding:5px 14px;font-size:.78rem;font-weight:700;}
+.pill-q{background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.45);color:#c4b5fd;}
+.pill-lv{background:var(--lb);border:1px solid var(--lc);color:var(--lc);}
+.pill-sc{background:rgba(245,200,66,.12);border:1px solid rgba(245,200,66,.35);color:var(--gold);min-width:120px;text-align:center;}
+.subject{font-size:.73rem;color:#6d5fa0;margin-bottom:12px;}
+/* group */
+.gpick{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.28);border-radius:14px;padding:14px 16px;margin-bottom:16px;}
+.gpick-label{font-size:.82rem;color:#c4b5fd;font-weight:700;margin-bottom:10px;}
+.gbtns{display:flex;gap:8px;flex-wrap:wrap;}
+.gbtn{background:rgba(124,58,237,.15);border:2px solid rgba(124,58,237,.3);border-radius:10px;
+  padding:9px 18px;color:#c4b5fd;font-family:'Sarabun',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .15s;}
+.gbtn:hover{border-color:var(--acc);background:rgba(124,58,237,.3);color:#fff;}
+.gbtn.on{border-color:var(--gold);background:rgba(245,200,66,.18);color:var(--gold);}
+/* question */
+.qtxt{font-size:clamp(1rem,3vw,1.18rem);font-weight:700;color:#fff;line-height:1.65;
+  margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(124,58,237,.2);}
+/* choices */
+.choices{display:flex;flex-direction:column;gap:9px;}
+.cbtn{background:rgba(124,58,237,.07);border:2px solid rgba(124,58,237,.22);border-radius:13px;
+  padding:13px 16px;color:#ddd6f3;font-family:'Sarabun',sans-serif;font-size:.97rem;font-weight:600;
+  text-align:left;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:11px;width:100%;}
+.cbtn:hover:not([disabled]):not(.on){border-color:var(--acc);background:rgba(124,58,237,.18);transform:translateX(4px);}
+.cbtn.on{border-color:var(--gold);background:rgba(245,200,66,.14);color:var(--gold);}
+.cbtn[disabled]{cursor:default;}
+.cbtn.correct{border-color:var(--green)!important;background:rgba(34,197,94,.18)!important;color:var(--green)!important;}
+.cbtn.wrong{border-color:var(--red)!important;background:rgba(239,68,68,.18)!important;color:#f87171!important;animation:shake .4s ease;}
+.cbtn.reveal{border-color:var(--green)!important;background:rgba(34,197,94,.08)!important;color:var(--green)!important;}
+.letter{width:28px;height:28px;flex-shrink:0;background:rgba(124,58,237,.28);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;}
+/* confirm */
+.cfm-wrap{margin-top:16px;}
+#cfm{width:100%;background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;border-radius:13px;
+  padding:15px;color:#fff;font-family:'Sarabun',sans-serif;font-size:1.05rem;font-weight:700;
+  cursor:pointer;transition:all .2s;box-shadow:0 4px 18px rgba(124,58,237,.45);}
+#cfm:hover:not([disabled]){transform:translateY(-2px);box-shadow:0 6px 24px rgba(124,58,237,.6);}
+#cfm[disabled]{opacity:.38;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+.status-msg{font-size:.8rem;color:#9d8ec7;text-align:center;margin-top:8px;min-height:20px;}
+/* result */
+.rbox{margin-top:14px;padding:16px 18px;border-radius:13px;font-weight:700;font-size:1rem;display:none;line-height:1.65;}
+.rbox.ok{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.4);color:var(--green);}
+.rbox.fail{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.4);color:#f87171;}
+.rbox.done{background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.3);color:var(--gold);}
+.expl{margin-top:10px;padding:12px 15px;border-radius:12px;background:rgba(124,58,237,.1);
+  border:1px solid rgba(124,58,237,.3);color:#b4a4e0;font-size:.87rem;display:none;line-height:1.55;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="topbar">
+    <span class="pill pill-q">📚 ข้อ 4/20</span>
+    <span class="pill pill-lv">🟢 ระดับง่าย</span>
+    <span class="pill pill-sc" id="sc">⭐ เลือกกลุ่มก่อน</span>
+  </div>
+  <div class="subject">🈶 คำยืมจากภาษาจีน · ภาษาไทย ม.ปลาย</div>
+
+  <div class="gpick" id="gpick">
+    <div class="gpick-label">👥 เลือกกลุ่มของคุณก่อน</div>
+    <div class="gbtns">
+      <button class="gbtn" data-g="1">กลุ่ม 1</button>
+      <button class="gbtn" data-g="2">กลุ่ม 2</button>
+      <button class="gbtn" data-g="3">กลุ่ม 3</button>
+      <button class="gbtn" data-g="4">กลุ่ม 4</button>
+      <button class="gbtn" data-g="5">กลุ่ม 5</button>
+      <button class="gbtn" data-g="6">กลุ่ม 6</button>
+    </div>
+  </div>
+
+  <div class="qtxt">ข้อ 4. คำว่า "เถ้าแก่" หมายถึงใคร</div>
+  <div class="choices" id="choices"><button class="cbtn"><span class="letter">ก</span>ลูกจ้าง</button>
+<button class="cbtn"><span class="letter">ข</span>เจ้าของร้าน</button>
+<button class="cbtn"><span class="letter">ค</span>ข้าราชการ</button>
+<button class="cbtn"><span class="letter">ง</span>ครู</button>
+</div>
+
+  <div class="cfm-wrap">
+    <button id="cfm" disabled>✅ ยืนยันคำตอบ</button>
+  </div>
+  <div class="status-msg" id="status"></div>
+  <div class="rbox" id="rbox"></div>
+  <div class="expl" id="expl">💡 เถ้าแก่ มาจากภาษาจีนแต้จิ๋ว หมายถึงเจ้าของกิจการหรือร้านค้า</div>
+</div>
+<script>
+(function(){{
+  var QNUM=4, CORRECT=1, TOTAL=20;
+  var API='/api/score';
+  var group=null, selIdx=-1, done=false;
+
+  var gpick=document.getElementById('gpick');
+  var cfm=document.getElementById('cfm');
+  var rbox=document.getElementById('rbox');
+  var expl=document.getElementById('expl');
+  var sc=document.getElementById('sc');
+  var status=document.getElementById('status');
+  var cbtns=Array.prototype.slice.call(document.querySelectorAll('.cbtn'));
+
+  function lockAll(){{ cbtns.forEach(function(b){{b.setAttribute('disabled','');}}) }}
+  function showBox(cls,html){{ rbox.className='rbox '+cls; rbox.innerHTML=html; rbox.style.display='block'; }}
+  function setStatus(msg){{ status.textContent=msg; }}
+
+  // ── กดเลือกกลุ่ม ────────────────────────────────────────────────────
+  document.querySelectorAll('.gbtn').forEach(function(btn){{
+    btn.addEventListener('click', function(){{
+      group = parseInt(this.getAttribute('data-g'));
+      document.querySelectorAll('.gbtn').forEach(function(b){{
+        b.classList.toggle('on', parseInt(b.getAttribute('data-g'))===group);
+      }});
+      gpick.style.display='none';
+      sc.textContent='⏳ โหลดคะแนน...';
+
+      // ดึงคะแนนปัจจุบันของกลุ่ม + เช็คว่าทำข้อนี้แล้วหรือยัง
+      fetch(API)
+        .then(function(r){{return r.json();}})
+        .then(function(j){{
+          if(!j.ok) throw new Error('api error');
+          var gd = j.groups[group] || {{score:0,answered:[]}};
+          sc.textContent='⭐ กลุ่ม '+group+': '+gd.score+' คะแนน';
+
+          if(gd.answered.indexOf(QNUM) !== -1){{
+            done=true;
+            lockAll();
+            cfm.setAttribute('disabled','');
+            cfm.textContent='✔ กลุ่มนี้ทำข้อนี้แล้ว';
+            cbtns[CORRECT].classList.add('reveal');
+            var left=TOTAL-gd.answered.length;
+            showBox('done','📜 กลุ่ม '+group+' ทำข้อนี้แล้ว<br>'
+              +'<small style="font-weight:400;font-size:.85rem">'
+              +'คะแนนสะสม: '+gd.score+' คะแนน · เหลืออีก '+left+' ข้อ</small>');
+            expl.style.display='block';
+          }}
+        }})
+        .catch(function(){{ sc.textContent='⭐ กลุ่ม '+group+' (offline)'; }});
+    }});
+  }});
+
+  // ── กดเลือกตัวเลือก ─────────────────────────────────────────────────
+  cbtns.forEach(function(btn, idx){{
+    btn.addEventListener('click', function(){{
+      if(done) return;
+      if(!group){{
+        gpick.style.outline='2px solid rgba(239,68,68,.7)';
+        setTimeout(function(){{gpick.style.outline='';}}, 1500);
+        return;
+      }}
+      selIdx=idx;
+      cbtns.forEach(function(b,i){{b.classList.toggle('on',i===idx);}});
+      cfm.removeAttribute('disabled');
+    }});
+  }});
+
+  // ── กดยืนยัน ────────────────────────────────────────────────────────
+  cfm.addEventListener('click', function(){{
+    if(done || selIdx===-1 || !group) return;
+    done=true;
+    cfm.setAttribute('disabled','');
+    lockAll();
+    setStatus('⏳ กำลังบันทึก...');
+
+    var correct=(selIdx===CORRECT);
+
+    fetch(API, {{
+      method:'POST',
+      headers:{{'Content-Type':'application/json'}},
+      body:JSON.stringify({{group:group, qnum:QNUM, correct:correct}})
+    }})
+    .then(function(r){{return r.json();}})
+    .then(function(j){{
+      setStatus('');
+      var gd = j.data || {{score:0, answered:[]}};
+      var left = TOTAL - (gd.answered ? gd.answered.length : 0);
+      sc.textContent='⭐ กลุ่ม '+group+': '+gd.score+' คะแนน';
+      cfm.textContent='✔ บันทึกแล้ว';
+
+      cbtns[selIdx].classList.remove('on');
+
+      if(j.duplicate){{
+        cbtns[CORRECT].classList.add('reveal');
+        showBox('done','📜 กลุ่ม '+group+' ทำข้อนี้ไปแล้ว<br>'
+          +'<small style="font-weight:400;font-size:.85rem">คะแนนสะสม: '+gd.score+' · เหลือ '+left+' ข้อ</small>');
+      }} else if(correct){{
+        cbtns[selIdx].classList.add('correct');
+        showBox('ok','🎉 ถูกต้อง! กลุ่ม '+group+' ได้ +1 คะแนน<br>'
+          +'<small style="font-weight:400;font-size:.85rem">'
+          +'คะแนนสะสมกลุ่ม '+group+': <b>'+gd.score+'</b> คะแนน'
+          +(left>0?' · เหลืออีก <b>'+left+'</b> ข้อ':' · <b>ครบ 20 ข้อแล้ว! 🏆</b>')
+          +'</small>');
+      }} else {{
+        cbtns[selIdx].classList.add('wrong');
+        cbtns[CORRECT].classList.add('reveal');
+        showBox('fail','❌ ตอบผิด — ไม่ได้คะแนน<br>'
+          +'<small style="font-weight:400;font-size:.85rem">'
+          +'คะแนนสะสมกลุ่ม '+group+': <b>'+gd.score+'</b> คะแนน'
+          +(left>0?' · เหลืออีก <b>'+left+'</b> ข้อ':' · <b>ครบ 20 ข้อแล้ว! 🏆</b>')
+          +'</small>');
+      }}
+      expl.style.display='block';
+    }})
+    .catch(function(){{
+      setStatus('⚠️ บันทึกไม่สำเร็จ — ตรวจสอบการเชื่อมต่อ');
+      cfm.textContent='🔄 ลองใหม่';
+      cfm.removeAttribute('disabled');
+      done=false;
+    }});
+  }});
+}})();
+</script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 คะแนนรวม – คำยืมจากภาษาจีน</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#f5c842;--dark:#0d0a1e;--card:#1e1a3a;--acc:#7c3aed;--green:#22c55e;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--dark);color:#e2d9f3;font-family:'Sarabun',sans-serif;min-height:100vh;
+  padding:24px 16px 60px;
+  background-image:radial-gradient(ellipse at 20% 20%,#1a0a3e 0%,transparent 60%),
+                   radial-gradient(ellipse at 80% 80%,#0a1a3e 0%,transparent 60%);}
+.wrap{max-width:700px;margin:0 auto;}
+header{text-align:center;padding:24px 0 20px;}
+h1{font-size:clamp(1.3rem,4vw,1.9rem);font-weight:800;color:var(--gold);text-shadow:0 0 24px rgba(245,200,66,.4);}
+.sub{color:#7c6fa0;font-size:.85rem;margin-top:6px;}
+.live-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,.12);
+  border:1px solid rgba(34,197,94,.4);border-radius:100px;padding:5px 14px;
+  font-size:.78rem;color:var(--green);font-weight:700;margin-top:10px;}
+.dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:blink 1.2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0;}
+.sum-card{background:var(--card);border:1px solid rgba(124,58,237,.3);border-radius:14px;padding:16px;text-align:center;}
+.sum-val{font-size:1.9rem;font-weight:800;color:var(--gold);line-height:1;}
+.sum-lbl{font-size:.75rem;color:#7c6fa0;margin-top:4px;}
+.lb-card{background:var(--card);border:1px solid rgba(124,58,237,.3);border-radius:16px;padding:20px;margin-bottom:16px;}
+.lb-title{font-weight:800;font-size:1rem;color:var(--gold);margin-bottom:14px;}
+.lb-row{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;border-radius:12px;margin-bottom:8px;
+  background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.15);transition:all .3s;}
+.lb-row.rank1{background:rgba(245,200,66,.1);border-color:rgba(245,200,66,.4);}
+.lb-row.rank2{background:rgba(192,192,192,.06);border-color:rgba(192,192,192,.25);}
+.lb-row.rank3{background:rgba(205,127,50,.08);border-color:rgba(205,127,50,.3);}
+.lb-row.empty{opacity:.32;border-style:dashed;}
+.lb-left{display:flex;align-items:center;gap:12px;}
+.rank-icon{font-size:1.3rem;min-width:28px;}
+.gname{font-weight:700;font-size:1rem;}
+.gmeta{font-size:.75rem;color:#7c6fa0;margin-top:2px;}
+.lb-right{text-align:right;}
+.gscore{font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1;}
+.gdone{font-size:.75rem;color:#7c6fa0;margin-top:2px;}
+.prog-bg{background:rgba(124,58,237,.15);border-radius:100px;height:6px;margin-top:6px;overflow:hidden;min-width:120px;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--gold));border-radius:100px;transition:width .8s ease;}
+.err-box{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:12px;
+  padding:14px;color:#f87171;font-size:.88rem;text-align:center;margin-bottom:12px;display:none;}
+.upd{text-align:center;font-size:.75rem;color:#4a3f6b;margin-top:10px;}
+.reset-btn{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.35);color:#f87171;
+  border-radius:10px;padding:10px 22px;font-family:'Sarabun',sans-serif;font-size:.9rem;
+  font-weight:700;cursor:pointer;transition:all .2s;margin-top:4px;}
+.reset-btn:hover{background:rgba(239,68,68,.22);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📊 คะแนนรวมแต่ละกลุ่ม</h1>
+    <p class="sub">แบบทดสอบ คำยืมจากภาษาจีน · ภาษาไทย ม.ปลาย · 20 ข้อ</p>
+    <div class="live-badge"><span class="dot"></span> LIVE · อัปเดตทุก 3 วินาที</div>
+  </header>
+
+  <div class="err-box" id="err">⚠️ เชื่อมต่อ API ไม่ได้ — ตรวจสอบ KV Store ใน Vercel Dashboard</div>
+
+  <div class="sum-grid">
+    <div class="sum-card"><div class="sum-val" id="s1">—</div><div class="sum-lbl">คะแนนรวมทุกกลุ่ม</div></div>
+    <div class="sum-card"><div class="sum-val" id="s2">—</div><div class="sum-lbl">ข้อที่ทำแล้วรวมกัน</div></div>
+    <div class="sum-card"><div class="sum-val" id="s3">—</div><div class="sum-lbl">กลุ่มที่เริ่มทำแล้ว</div></div>
+  </div>
+
+  <div class="lb-card">
+    <div class="lb-title">🏆 อันดับคะแนนกลุ่ม</div>
+    <div id="lb"><div style="text-align:center;padding:24px;color:#7c6fa0;">⏳ กำลังโหลด...</div></div>
+    <div class="upd" id="upd"></div>
+  </div>
+
+  <div style="text-align:center;">
+    <button class="reset-btn" onclick="confirmReset()">🗑️ รีเซ็ตคะแนนทั้งหมด (ครูเท่านั้น)</button>
+  </div>
+</div>
+
+<script>
+var TOTAL=20;
+var RANKS=['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣'];
+var RCLS=['rank1','rank2','rank3','','',''];
+var API='/api/score';
+
+function fetchAndRender(){
+  fetch(API)
+    .then(function(r){return r.json();})
+    .then(function(j){
+      if(!j.ok) throw new Error('not ok');
+      document.getElementById('err').style.display='none';
+
+      var groups=[];
+      for(var g=1;g<=6;g++){
+        var d=j.groups[g]||{score:0,answered:[]};
+        groups.push({g:g, score:d.score, ans:(d.answered||[]).length});
+      }
+      var sorted=[].concat(groups).sort(function(a,b){
+        return b.score-a.score || b.ans-a.ans || a.g-b.g;
+      });
+
+      var ts=0,ta=0,ac=0;
+      groups.forEach(function(x){ts+=x.score;ta+=x.ans;if(x.ans>0)ac++;});
+      document.getElementById('s1').textContent=ts;
+      document.getElementById('s2').textContent=ta;
+      document.getElementById('s3').textContent=ac+'/6';
+
+      var html='';
+      sorted.forEach(function(x,idx){
+        var pct=Math.round(x.ans/TOTAL*100);
+        var left=TOTAL-x.ans;
+        var empty=(x.ans===0);
+        html+='<div class="lb-row '+RCLS[idx]+(empty?' empty':'')+'">'
+          +'<div class="lb-left"><div class="rank-icon">'+RANKS[idx]+'</div>'
+          +'<div><div class="gname">กลุ่ม '+x.g+'</div>'
+          +'<div class="gmeta">'+(empty?'ยังไม่ได้ทำ'
+            :'ทำแล้ว '+x.ans+'/'+TOTAL+(left>0?' · เหลือ '+left+' ข้อ':' · ครบแล้ว ✅'))+'</div>'
+          +'<div class="prog-bg"><div class="prog-fill" style="width:'+pct+'%"></div></div>'
+          +'</div></div>'
+          +'<div class="lb-right"><div class="gscore">'+x.score+'</div>'
+          +'<div class="gdone">คะแนน</div></div></div>';
+      });
+      document.getElementById('lb').innerHTML=html;
+
+      var now=new Date();
+      document.getElementById('upd').textContent='อัปเดตล่าสุด '
+        +now.getHours().toString().padStart(2,'0')+':'
+        +now.getMinutes().toString().padStart(2,'0')+':'
+        +now.getSeconds().toString().padStart(2,'0');
+    })
+    .catch(function(){
+      document.getElementById('err').style.display='block';
+    });
+}
+
+function confirmReset(){
+  var pw=prompt('ใส่รหัสครู:');
+  if(pw!=='1234') return;
+  if(!confirm('รีเซ็ตคะแนนทุกกลุ่มใช่ไหม?\nข้อมูลจะหายหมด!')) return;
+  var resets=[];
+  for(var g=1;g<=6;g++){
+    resets.push(fetch(API,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({reset:true,group:g})
+    }));
+  }
+  Promise.all(resets).then(fetchAndRender).catch(function(){alert('รีเซ็ตไม่สำเร็จ');});
+}
+
+fetchAndRender();
+setInterval(fetchAndRender,3000);
+</script>
+</body>
+</html>
